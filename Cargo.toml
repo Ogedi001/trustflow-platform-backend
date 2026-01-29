@@ -1,0 +1,40 @@
+
+[workspace]
+members = [
+    "services/order",
+    "services/escrow",
+    "services/identity",
+    "services/catalog",
+    "services/shipment",
+    "services/evidence",
+    "services/dispute",
+    "services/trust",
+    "services/risk",
+    "services/gateway",
+    "services/notification",
+    "services/messaging",
+    "services/analytics",
+    "libs/common", 
+    "libs/config",
+    "libs/telemetry",
+    "libs/messaging", 
+    "libs/db",
+    "libs/domain",
+    "libs/error", 
+    "libs/payment", 
+    "libs/auth",
+    "libs/logistics", 
+]
+resolver = "3"
+
+[workspace.package]
+
+version = "0.1.0"
+edition = "2024"
+
+[workspace.dependencies]
+tokio = { version = "1.48.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0.18"
+time = {version="0.3.45",features = ["serde", "parsing", "formatting", "macros"]}

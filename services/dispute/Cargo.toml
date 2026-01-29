@@ -1,0 +1,12 @@
+[package]
+name = "dispute"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+common = { path = "../../libs/common" }
+config = { path = "../../libs/config" }
+tokio.workspace = true     
+serde.workspace = true 
+axum = { version = "0.8.8",optional=true ,features = ["macros","ws"] }
+  

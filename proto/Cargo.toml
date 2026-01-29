@@ -1,0 +1,12 @@
+# proto/Cargo.toml
+[package]
+name = "proto"
+version.workspace = true
+edition.workspace = true
+
+[build-dependencies]
+tonic-build = "0.10"
+
+[dependencies]
+tonic = "0.10"
+prost = "0.12"
