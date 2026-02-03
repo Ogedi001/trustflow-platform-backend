@@ -7,5 +7,7 @@ edition.workspace = true
 common = { path = "../../libs/common" }
 config = { path = "../../libs/config" }
 tokio.workspace = true     
-serde.workspace = true   
-axum = { version = "0.8.8", optional=true ,features = ["macros"] }
+serde.workspace = true    
+axum = { version = "0.8.8", optional=true, features = ["macros"] }
+tracing.workspace=true
+tracing-subscriber = "0.3.22"
