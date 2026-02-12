@@ -7,7 +7,9 @@ use axum::http::StatusCode;
 use serde::Serialize;
 use serde_json::Value;
 
-use super::error_code::{AuthErrorCode, ErrorCode};
+use crate::AuthErrorCode;
+
+use super::error_code::ErrorCode;
 
 /// Represents a field-level validation error
 #[derive(Debug, Serialize, Clone)]
@@ -27,7 +29,7 @@ pub struct FieldError {
 /// - Optional details (validation errors, field errors, etc.)
 /// - HTTP status code (for internal use, not serialized)
 #[derive(Debug, Serialize, Clone)]
-#[serde(tag = "error_type", content = "message")]
+#[serde(tag = "error_type")]
 pub struct ApiError {
     /// Machine-readable error code (e.g., "VALIDATION_ERROR", "NOT_FOUND")
     pub code: ErrorCode,
@@ -168,9 +170,11 @@ impl ApiError {
 
     /// 500 Internal Server Error with details
     pub fn internal_with_details(message: impl Into<String>, details: impl Into<String>) -> Self {
+        let message = message.into();
+        let details = details.into();
         Self::new(
             ErrorCode::InternalError,
-            format!("{}: {}", message, details()),
+            format!("{}: {}", message, details),
         )
         .with_status(StatusCode::INTERNAL_SERVER_ERROR)
     }
@@ -224,6 +228,25 @@ impl std::fmt::Display for ErrorCode {
 /// This is the standard result type for HTTP handlers in the application.
 /// All handler functions should return `ApiResult<T>` where `T` is the response data type.
 pub type ApiResult<T = Value> = Result<T, ApiError>;
+
+// Convert AppError to ApiError
+impl From<crate::core::AppError> for ApiError {
+    fn from(error: crate::core::AppError) -> Self {
+        match error {
+            crate::core::AppError::ValidationError(e) => e.into(),
+            crate::core::AppError::AuthenticationError(e) => e.into(),
+            crate::core::AppError::AuthorizationError(e) => e.into(),
+            crate::core::AppError::NotFoundError(e) => e.into(),
+            crate::core::AppError::ConflictError(e) => e.into(),
+            crate::core::AppError::RateLimitError(e) => e.into(),
+            crate::core::AppError::BusinessError(e) => e.into(),
+            crate::core::AppError::ExternalServiceError(e) => e.into(),
+            crate::core::AppError::DatabaseError(e) => e.into(),
+            crate::core::AppError::InfrastructureError(e) => e.into(),
+            crate::core::AppError::InternalError(e) => e.into(),
+        }
+    }
+}
 
 // #[cfg(test)]
 // mod tests {

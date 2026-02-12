@@ -22,7 +22,10 @@
 //! ```
 
 pub mod api_error;
+pub mod converters;
 pub mod error_code;
 
 pub use api_error::{ApiError, ApiResult, FieldError};
-pub use error_code::{AuthErrorCode, ErrorCode};
+pub use error_code::ErrorCode;
+// re-export domain auth codes for HTTP users
+pub use crate::core::codes::auth_error::AuthErrorCode;

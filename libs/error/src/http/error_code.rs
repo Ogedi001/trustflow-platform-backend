@@ -5,6 +5,8 @@
 
 use serde::{Deserialize, Serialize};
 
+use crate::AuthErrorCode;
+
 /// Standard error codes for HTTP API responses
 ///
 /// These codes are designed to be:
@@ -45,89 +47,6 @@ pub enum ErrorCode {
     BadGateway,
 }
 
-/// Authentication and authorization specific error codes
-///
-/// These codes provide more specific information about auth-related failures
-/// and are used within the broader Unauthorized/Forbidden categories.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-pub enum AuthErrorCode {
-    /// Invalid username or password
-    InvalidCredentials,
-
-    /// Account has been locked due to security reasons
-    AccountLocked,
-
-    /// Account has been suspended by an administrator
-    AccountSuspended,
-
-    /// Account has been permanently deleted
-    AccountDeleted,
-
-    /// Multi-factor authentication is required to proceed
-    MfaRequired,
-
-    /// The provided MFA token/code is invalid
-    MfaInvalid,
-
-    /// The MFA token has expired and a new one is needed
-    MfaExpired,
-
-    /// The authentication token has expired
-    TokenExpired,
-
-    /// The authentication token is invalid
-    TokenInvalid,
-
-    /// The authentication token has been revoked
-    TokenRevoked,
-
-    /// The session has expired
-    SessionExpired,
-
-    /// The session is invalid
-    SessionInvalid,
-
-    /// The password has expired and needs to be changed
-    PasswordExpired,
-
-    /// The password does not meet strength requirements
-    PasswordWeak,
-
-    /// The provided passwords do not match
-    PasswordMismatch,
-
-    /// Rate limiting applied to authentication attempts
-    RateLimited,
-
-    /// IP address has been blocked
-    IpBlocked,
-
-    /// Device has been blocked
-    DeviceBlocked,
-
-    /// Token is missing from the request
-    TokenMissing,
-
-    /// Insufficient permissions to perform the action
-    InsufficientPermissions,
-
-    /// Account is not active
-    AccountInactive,
-
-    /// Email has not been verified
-    EmailNotVerified,
-
-    /// Phone has not been verified
-    PhoneNotVerified,
-
-    /// Social login is required
-    SocialLoginRequired,
-
-    /// The invite code is invalid or expired
-    InvalidInviteCode,
-}
-
 impl ErrorCode {
     /// Get the default HTTP status code for this error code
     pub fn status_code(&self) -> u16 {
@@ -148,19 +67,20 @@ impl ErrorCode {
 
 impl AuthErrorCode {
     /// Get the parent HTTP error code for this auth error code
-    pub fn parent_error_code(&self) -> ErrorCode {
+    pub fn parent_error_code(&self) -> crate::http::ErrorCode {
         match self {
-            Self::InsufficientPermissions => ErrorCode::Forbidden,
+            Self::InsufficientPermissions => crate::http::ErrorCode::Forbidden,
             Self::AccountLocked
             | Self::AccountSuspended
             | Self::AccountDeleted
             | Self::AccountInactive
             | Self::TokenExpired
+            | Self::TokenInvalid
             | Self::TokenRevoked
             | Self::SessionExpired
             | Self::SessionInvalid
             | Self::PasswordExpired
-            | Self::TokenMissing => ErrorCode::Unauthorized,
+            | Self::TokenMissing => crate::http::ErrorCode::Unauthorized,
             Self::InvalidCredentials
             | Self::MfaRequired
             | Self::MfaInvalid
@@ -173,7 +93,7 @@ impl AuthErrorCode {
             | Self::EmailNotVerified
             | Self::PhoneNotVerified
             | Self::SocialLoginRequired
-            | Self::InvalidInviteCode => ErrorCode::Unauthorized,
+            | Self::InvalidInviteCode => crate::http::ErrorCode::Unauthorized,
         }
     }
 }

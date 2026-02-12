@@ -4,11 +4,17 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
-tokio.workspace = true     
-serde.workspace = true 
-serde_json.workspace =true  
-time.workspace=true
-axum = { version = "0.8.8", optional = true, features = ["macros"] }  
+error = { path = "../error", features = ["http"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror.workspace = true
+time.workspace = true
+axum = { version = "0.8.8", optional = true, features = ["macros"] }
+uuid.workspace = true
+tracing.workspace = true
+fastrand = "2.0.0"
+regex = "1.5"
+lazy_static = "1.4"
 
 [features]
 default = []
