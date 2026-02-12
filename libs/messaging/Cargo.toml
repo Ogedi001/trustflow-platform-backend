@@ -1,6 +1,0 @@
-[package]
-name = "messaging-lib"
-version.workspace = true
-edition.workspace = true
-
-[dependencies]

@@ -1,6 +1,0 @@
-[package]
-name = "auth"
-version.workspace = true
-edition.workspace = true
-
-[dependencies]
