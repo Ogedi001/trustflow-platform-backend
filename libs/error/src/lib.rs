@@ -30,11 +30,11 @@
 pub mod adapters;
 pub mod core;
 
-// #[cfg(feature = "http")]
+#[cfg(feature = "http")]
 pub mod http;
 
 // Re-export core types for convenience
 pub use core::{AppError, AppResult, ContextualError, ErrorContext};
 
-// #[cfg(feature = "http")]
+#[cfg(feature = "http")]
 pub use http::{ApiError, ApiResult, AuthErrorCode, ErrorCode, FieldError};
