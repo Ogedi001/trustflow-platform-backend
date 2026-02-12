@@ -1,6 +1,6 @@
-
 [workspace]
 members = [
+    # Services
     "services/order",
     "services/escrow",
     "services/identity",
@@ -14,16 +14,12 @@ members = [
     "services/notification",
     "services/messaging",
     "services/analytics",
-    "libs/common", 
+    # Libraries
+    "libs/common",
     "libs/config",
     "libs/telemetry",
-    "libs/messaging", 
-    "libs/db",
-    "libs/domain",
-    "libs/error", 
-    "libs/payment", 
-    "libs/auth",
-    "libs/logistics", 
+    "libs/error",
+    "libs/infrastructure",
 ]
 resolver = "3"
 
@@ -41,3 +37,4 @@ time = {version="0.3.45",features = ["serde", "parsing", "formatting", "macros"]
 sqlx = { version = "0.8.6", features = ["runtime-tokio", "tls-rustls", "postgres", "uuid", "time", "json","macros","migrate"] }
 uuid = { version = "1.2.0", features = ["v4", "serde"] }
 tracing = "0.1.44"
+
