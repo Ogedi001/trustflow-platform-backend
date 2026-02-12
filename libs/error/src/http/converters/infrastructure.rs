@@ -2,7 +2,6 @@
 
 use crate::core::kinds::InfrastructureError;
 use crate::http::ApiError;
-use axum::http::StatusCode;
 
 impl From<InfrastructureError> for ApiError {
     fn from(error: InfrastructureError) -> Self {
