@@ -1,4 +1,4 @@
-use super::ApiError;
+use super::error::ApiError;
 use axum::response::IntoResponse;
 
 pub async fn not_found_handler() -> impl IntoResponse {

@@ -1,5 +1,6 @@
-use super::{ApiError, meta::Meta};
-use axum::http::StatusCode;
+use super::meta::Meta;
+use axum::{Json, http::StatusCode, response::IntoResponse};
+use error::http::ApiError;
 use serde::Serialize;
 use serde_json::Value;
 
@@ -69,3 +70,17 @@ impl<T> ApiResponse<T> {
 }
 
 pub type ApiResult<T = Value> = Result<ApiResponse<T>, ApiError>;
+
+impl<T: Serialize> IntoResponse for ApiResponse<T> {
+    fn into_response(self) -> axum::response::Response {
+        let status = self.status_code.unwrap_or_else(|| {
+            if self.success {
+                StatusCode::OK
+            } else {
+                StatusCode::INTERNAL_SERVER_ERROR
+            }
+        });
+
+        (status, Json(self)).into_response()
+    }
+}
