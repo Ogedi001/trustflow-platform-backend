@@ -5,7 +5,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::AuthErrorCode;
+use crate::core::AuthErrorCode;
 
 /// Standard error codes for HTTP API responses
 ///

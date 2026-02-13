@@ -3,11 +3,16 @@
 //! Provides ApiError and ApiResult types for standardized HTTP API responses
 //! across all services.
 
-use axum::http::StatusCode;
+use axum::{
+    Json,
+    body::Body,
+    http::{Response, StatusCode},
+    response::IntoResponse,
+};
 use serde::Serialize;
 use serde_json::Value;
 
-use crate::AuthErrorCode;
+use crate::core::AuthErrorCode;
 
 use super::error_code::ErrorCode;
 
@@ -228,6 +233,28 @@ impl std::fmt::Display for ErrorCode {
 /// This is the standard result type for HTTP handlers in the application.
 /// All handler functions should return `ApiResult<T>` where `T` is the response data type.
 pub type ApiResult<T = Value> = Result<T, ApiError>;
+
+impl IntoResponse for ApiError {
+    fn into_response(self) -> Response<Body> {
+        let status = self
+            .status_code
+            .unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
+
+        // Create a simple error response using the local ApiError
+        #[derive(serde::Serialize)]
+        struct ErrorResponse {
+            success: bool,
+            error: ApiError,
+        }
+
+        let response = ErrorResponse {
+            success: false,
+            error: self,
+        };
+
+        (status, Json(response)).into_response()
+    }
+}
 
 // Convert AppError to ApiError
 impl From<crate::core::AppError> for ApiError {
