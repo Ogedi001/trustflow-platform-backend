@@ -4,5 +4,15 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
-tokio.workspace = true     
-serde.workspace = true     
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+# YAML support
+serde_yaml = "0.9"
+
+# dotenv support
+dotenvy = "0.15"
+
+# interpolation
+regex = "1.11"
