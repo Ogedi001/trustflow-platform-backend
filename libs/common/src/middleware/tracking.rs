@@ -12,16 +12,15 @@
 //! let app = axum::Router::new()
 //!     .route_layer(tracking_layer());
 //! ```
+//!
+//! Header constants are imported from `crate::http::headers::constants`
 
+use crate::http::headers::constants::{
+    CORRELATION_ID as CORRELATION_ID_HEADER, IDEMPOTENCY_KEY as IDEMPOTENCY_KEY_HEADER,
+    REQUEST_ID as REQUEST_ID_HEADER,
+};
 use crate::value_objects::tracking::{CorrelationId, IdempotencyKey, RequestId, TrackingContext};
 use axum::{extract::Request, http::HeaderValue, middleware::Next, response::Response};
-
-/// Standard HTTP header names for tracking
-pub mod header_names {
-    pub const REQUEST_ID: &str = "x-request-id";
-    pub const CORRELATION_ID: &str = "x-correlation-id";
-    pub const IDEMPOTENCY_KEY: &str = "idempotency-key";
-}
 
 /// Configuration for unified tracking middleware
 #[derive(Debug, Clone)]
@@ -41,9 +40,9 @@ pub struct TrackingConfig {
 impl Default for TrackingConfig {
     fn default() -> Self {
         Self {
-            request_id_header: header_names::REQUEST_ID,
-            correlation_id_header: header_names::CORRELATION_ID,
-            idempotency_key_header: header_names::IDEMPOTENCY_KEY,
+            request_id_header: REQUEST_ID_HEADER,
+            correlation_id_header: CORRELATION_ID_HEADER,
+            idempotency_key_header: IDEMPOTENCY_KEY_HEADER,
             generate_request_id: true,
             generate_correlation_id: true,
         }

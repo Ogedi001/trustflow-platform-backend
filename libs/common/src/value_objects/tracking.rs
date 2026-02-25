@@ -4,16 +4,11 @@
 //! - `RequestId`: Unique identifier for each request
 //! - `CorrelationId`: ID for tracing requests across service boundaries
 //! - `IdempotencyKey`: Key for idempotent operation detection
+//!
+//! Header constants are defined in `http::headers::constants`
 
 use std::fmt;
 use uuid::Uuid;
-
-/// Standard header names for tracking
-pub mod header_names {
-    pub const REQUEST_ID: &str = "x-request-id";
-    pub const CORRELATION_ID: &str = "x-correlation-id";
-    pub const IDEMPOTENCY_KEY: &str = "idempotency-key";
-}
 
 /// Request ID for tracing individual requests
 ///
