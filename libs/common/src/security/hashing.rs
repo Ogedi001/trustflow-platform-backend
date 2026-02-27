@@ -4,7 +4,7 @@
 //! This module requires no external dependencies for basic hashing,
 //! but argon2 feature can be enabled for Argon2 support.
 
-use crate::value_objects::PasswordHash;
+use crate::value_objects::security::PasswordHash;
 
 /// Password hashing result type
 pub type HashResult<T> = Result<T, HashError>;

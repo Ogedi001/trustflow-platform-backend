@@ -3,7 +3,7 @@
 # Configuration
 CARGO := cargo
 PROJECT := trust-platform
-SERVICES := identity trust catalog order escrow shipment dispute notification messaging risk evidence analytics gateway
+SERVICES := gateway
 LIBS := common db config telemetry messaging domain error auth payment logistics
 PROTO_DIR := proto
 
@@ -42,8 +42,8 @@ help:
 	@echo "  make quality     - Run all quality checks (fmt + clippy + test)"
 	@echo ""
 	@echo "$(YELLOW)Service Management:$(NC)"
-	@echo "  make run-SERVICE - Run specific service"
-	@echo "  make run-all     - Run all services"
+	@echo "  make run-gateway - Run the single deployable server"
+	@echo "  make run-all     - Alias for run-gateway"
 	@echo "  make stop        - Stop all running services"
 	@echo ""
 	@echo "$(YELLOW)Protobuf & Code Generation:$(NC)"
@@ -180,17 +180,7 @@ endef
 
 $(foreach svc,$(SERVICES),$(eval $(call RUN_TEMPLATE,$(svc))))
 
-run-all:
-	@echo "$(GREEN)🚀 Starting all services...$(NC)"
-	@for service in $(SERVICES); do \
-		echo "$(BLUE)▶ Starting $$service...$(NC)"; \
-		$(CARGO) run -p $$service & \
-	done
-	@echo "$(GREEN)✅ All services started!$(NC)"
-	@echo "$(YELLOW)Services running in background.$(NC)"
-	@echo "$(YELLOW)To stop: 'make stop' or 'pkill -f \"cargo run\"'$(NC)"
-	@echo "$(YELLOW)To see output, check each service's terminal$(NC)"
-	@wait  # Keeps the make command running
+run-all: run-gateway
 
 stop:
 	@echo "$(RED)🛑 Stopping all services...$(NC)"

@@ -1,33 +1,40 @@
 //! Authentication extractor
 
 use axum::{
-    async_trait,
-    extract::{FromRequestParts, TypedHeader},
-    headers::Authorization,
-    headers::authorization::Bearer,
-    http::{request::Parts, StatusCode},
+    extract::FromRequestParts,
+    http::{StatusCode, request::Parts},
 };
 
 /// Bearer token extractor
 pub struct BearerToken(pub String);
 
-#[async_trait]
 impl<S> FromRequestParts<S> for BearerToken
 where
     S: Send + Sync,
 {
     type Rejection = AuthorityRejection;
 
-    async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
-        match TypedHeader::<Authorization<Bearer>>::from_request_parts(parts, state).await {
-            Ok(TypedHeader(Authorization(bearer))) => {
-                Ok(BearerToken(bearer.0.to_string()))
-            }
-            Err(_) => Err(AuthorityRejection(
+    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
+        let header = parts
+            .headers
+            .get(axum::http::header::AUTHORIZATION)
+            .and_then(|value| value.to_str().ok())
+            .ok_or(AuthorityRejection(
+                StatusCode::UNAUTHORIZED,
+                "Missing authorization header",
+            ))?;
+
+        let token = header
+            .strip_prefix("Bearer ")
+            .or_else(|| header.strip_prefix("bearer "))
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+            .ok_or(AuthorityRejection(
                 StatusCode::UNAUTHORIZED,
                 "Missing or invalid authorization header",
-            )),
-        }
+            ))?;
+
+        Ok(BearerToken(token.to_string()))
     }
 }
 

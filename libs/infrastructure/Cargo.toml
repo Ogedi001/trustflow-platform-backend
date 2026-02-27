@@ -2,7 +2,7 @@
 name = "infrastructure"
 version.workspace = true
 edition.workspace = true
-description = "Production-grade infrastructure components for microservices - Database, Redis, resilience patterns, observability"
+description = "Shared infrastructure layer for the modular monolith"
 
 [dependencies]
 # Workspace dependencies
@@ -11,78 +11,20 @@ serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
 time.workspace = true
-uuid.workspace = true
 tracing.workspace = true
+sqlx = { workspace = true, features = ["runtime-tokio", "postgres", "migrate", "uuid", "time", "json"] }
 
 # Internal libraries
 error = { path = "../error" }
 config = { path = "../config" }
 
 # Redis
-redis = { version = "0.26", optional = true, features = ["aio", "tokio-comp"] }
-async-trait = "0.1"
+redis = { version = "0.26", features = ["aio", "tokio-comp", "connection-manager"] }
 
-# Database
-sqlx = { workspace = true, optional = true, features = ["runtime-tokio", "postgres", "migrate", "uuid", "time", "json"] }
-
-# HTTP client for external services
-reqwest = { version = "0.12", optional = true, features = ["json", "stream", "cookies"] }
-
-# Resilience patterns
-futures = { version = "0.3", optional = true }
-
-# Observability
-metrics = { version = "0.24", optional = true }
-tracing-subscriber = { version = "0.3", optional = true, features = ["json", "fmt"] }
-prometheus = { version = "0.13", optional = true }
-
-# Search
-opensearch = { version = "2.0", optional = true }
-meilisearch-sdk = { version = "0.32", optional = true }
-
-# Service discovery
-consul = { version = "0.4", optional = true }
-
-# Scheduling
-tokio-cron-scheduler = { version = "0.11", optional = true }
-
+# Misc
 url = "2.5"
 
 [features]
 default = ["database", "redis"]
-
-# Feature flags for optional modules
-database = ["dep:sqlx"]
-redis = ["dep:redis"]
-http = ["dep:reqwest"]
-resilience = ["dep:futures"]
-observability = ["dep:metrics", "dep:prometheus", "dep:tracing-subscriber"]
-search = ["dep:opensearch", "dep:meilisearch-sdk"]
-discovery = ["dep:consul"]
-scheduler = ["dep:tokio-cron-scheduler"]
-
-# Combined feature sets
-cache = ["redis"]
-queue = ["redis"]
-locks = ["redis"]
-sessions = ["redis"]
-
-# Full feature set for development/testing
-full = [
-    "database",
-    "redis",
-    "http",
-    "resilience",
-    "observability",
-    "search",
-    "discovery",
-    "scheduler",
-]
-
-[dev-dependencies]
-rstest = "0.21"
-proptest = "1.4"
-tokio-test = "0.4"
-mockito = "1.6"
-
-
+database = []
+redis = []

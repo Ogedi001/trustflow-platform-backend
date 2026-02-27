@@ -32,3 +32,5 @@ pub mod core;
 
 #[cfg(feature = "http")]
 pub mod http;
+
+pub use core::{AppError, AppResult};

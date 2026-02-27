@@ -36,4 +36,7 @@ pub mod tracking;
 pub mod ulid;
 
 // Re-export all tracking types from unified tracking module
+pub use contact::{EmailAddress, PhoneNumber};
+pub use security::{ApiKey, PasswordHash, Secret};
+pub use timestamps::{Duration, TimeRange, Timestamp};
 pub use tracking::{CorrelationId, IdempotencyKey, RequestId, TrackingContext};

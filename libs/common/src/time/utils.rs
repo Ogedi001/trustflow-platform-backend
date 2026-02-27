@@ -1,6 +1,6 @@
 //! Time comparison and utility functions
 
-use crate::value_objects::{Duration, Timestamp};
+use crate::value_objects::timestamps::{Duration, Timestamp};
 
 /// Time utility functions
 pub struct TimeUtils;

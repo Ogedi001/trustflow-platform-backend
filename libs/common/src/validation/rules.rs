@@ -2,7 +2,7 @@
 //!
 //! This module provides reusable validation rules for common domain constraints.
 
-use crate::value_objects::{EmailAddress, PhoneNumber};
+use crate::value_objects::contact::{EmailAddress, PhoneNumber};
 
 /// Result type for validation operations
 pub type ValidationResult<T> = Result<T, ValidationError>;

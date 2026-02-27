@@ -1,6 +1,6 @@
 //! Clock and current time utilities
 
-use crate::value_objects::Timestamp;
+use crate::value_objects::timestamps::Timestamp;
 
 /// System clock for getting current time
 pub struct Clock;

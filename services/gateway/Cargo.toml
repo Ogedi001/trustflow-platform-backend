@@ -3,12 +3,25 @@ name = "gateway"
 version.workspace = true
 edition.workspace = true
 
-
 [dependencies]
-common = { path = "../../libs/common" }
+axum = { version = "0.8.8" }
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber = { version = "0.3.22", features = ["env-filter", "fmt"] }
+
+common = { path = "../../libs/common", features = ["http"] }
 config = { path = "../../libs/config" }
-tokio.workspace = true     
-serde.workspace = true    
-axum = { version = "0.8.8", optional=true, features = ["macros"] }
-tracing.workspace=true
-tracing-subscriber = "0.3.22"
+infrastructure = { path = "../../libs/infrastructure" }
+
+analytics = { path = "../analytics" }
+catalog = { path = "../catalog" }
+dispute = { path = "../dispute" }
+escrow = { path = "../escrow" }
+evidence = { path = "../evidence" }
+identity = { path = "../identity" }
+messaging = { path = "../messaging" }
+notification = { path = "../notification" }
+order = { path = "../order" }
+risk = { path = "../risk" }
+shipment = { path = "../shipment" }
+trust = { path = "../trust" }

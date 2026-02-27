@@ -1,7 +1,6 @@
 //! Query string extractor
 
 use axum::{
-    async_trait,
     extract::{FromRequestParts, Query},
     http::request::Parts,
 };
@@ -10,12 +9,15 @@ use serde::de::DeserializeOwned;
 /// Query string extractor
 pub struct QueryExtractor<T>(pub T);
 
-#[async_trait]
-impl<T: DeserializeOwned + Send> FromRequestParts<()> for QueryExtractor<T> {
+impl<S, T> FromRequestParts<S> for QueryExtractor<T>
+where
+    S: Send + Sync,
+    T: DeserializeOwned + Send,
+{
     type Rejection = axum::extract::rejection::QueryRejection;
 
-    async fn from_request_parts(parts: &mut Parts, _: &()) -> Result<Self, Self::Rejection> {
-        match Query::<T>::from_request_parts(parts, &()).await {
+    async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
+        match Query::<T>::from_request_parts(parts, state).await {
             Ok(Query(value)) => Ok(QueryExtractor(value)),
             Err(e) => Err(e),
         }

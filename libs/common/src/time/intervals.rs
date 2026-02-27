@@ -1,6 +1,6 @@
 //! Interval and periodic execution utilities
 
-use crate::value_objects::{Duration, Timestamp};
+use crate::value_objects::timestamps::{Duration, Timestamp};
 
 /// Interval for periodic tasks
 #[derive(Debug, Clone)]

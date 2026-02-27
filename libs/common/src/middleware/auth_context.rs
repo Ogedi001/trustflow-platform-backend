@@ -3,9 +3,7 @@
 //! Extracts authentication context from bearer tokens and inserts it into
 //! request extensions for use in handlers.
 
-use axum::extract::FromRequestParts;
 use axum::http::StatusCode;
-use axum::http::request::Parts;
 use axum::middleware::Next;
 use axum::response::Response;
 use axum::{extract::Request, middleware};
@@ -73,8 +71,7 @@ pub async fn auth_context(mut req: Request, next: Next) -> Result<Response, Stat
     if let Some(auth_header) = headers.get("authorization") {
         if let Ok(auth_str) = auth_header.to_str() {
             if auth_str.starts_with("Bearer ") {
-                let token = &auth_str[7..];
-                // In production, would validate JWT here
+                // In production, would validate JWT here.
                 let context = AuthContext::new("user-from-token").with_subject("user-subject");
                 req.extensions_mut().insert(Arc::new(context));
             }
@@ -85,8 +82,6 @@ pub async fn auth_context(mut req: Request, next: Next) -> Result<Response, Stat
 }
 
 /// Layer for auth context middleware
-pub fn auth_context_layer() -> axum::middleware::FromFn<
-    impl Fn(Request, Next) -> futures::future::BoxFuture<'static, Result<Response, StatusCode>> + Clone,
-> {
-    middleware::from_fn(|req, next| Box::pin(auth_context(req, next)))
+pub fn auth_context_layer() -> impl Clone {
+    middleware::from_fn::<_, ()>(|req, next| Box::pin(auth_context(req, next)))
 }

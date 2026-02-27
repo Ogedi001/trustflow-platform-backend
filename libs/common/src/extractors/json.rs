@@ -1,7 +1,7 @@
 //! JSON extractor for request bodies
 
 use axum::{
-    Json, async_trait,
+    Json,
     extract::{FromRequest, Request},
     http::StatusCode,
     response::{IntoResponse, Response},
@@ -11,14 +11,14 @@ use serde::de::DeserializeOwned;
 /// Custom JSON extractor with better error messages
 pub struct JsonExtractor<T>(pub T);
 
-#[async_trait]
-impl<T: DeserializeOwned> FromRequest for JsonExtractor<T> {
+impl<S, T> FromRequest<S> for JsonExtractor<T>
+where
+    S: Send + Sync,
+    T: DeserializeOwned,
+{
     type Rejection = JsonRejection;
 
-    async fn from_request(
-        req: Request,
-        state: &axum::extract::State<()>,
-    ) -> Result<Self, Self::Rejection> {
+    async fn from_request(req: Request, state: &S) -> Result<Self, Self::Rejection> {
         match Json::<T>::from_request(req, state).await {
             Ok(Json(value)) => Ok(JsonExtractor(value)),
             Err(_) => Err(JsonRejection(StatusCode::BAD_REQUEST, "Invalid JSON")),

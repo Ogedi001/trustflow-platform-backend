@@ -3,8 +3,8 @@
 //! Provides utilities for CSRF (Cross-Site Request Forgery) token generation
 //! and validation for HTTP endpoints.
 
+use crate::value_objects::security::Secret;
 use fastrand;
-use crate::value_objects::Secret;
 
 /// CSRF token wrapper
 #[derive(Debug, Clone, PartialEq, Eq)]

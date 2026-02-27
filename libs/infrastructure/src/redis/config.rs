@@ -173,13 +173,7 @@ impl RedisConfig {
 
     /// Build a fully namespaced Redis key
     pub fn key(&self, domain: &str, key: &str) -> String {
-        // reuse RedisKey builder to ensure formatting stays in one place
-        crate::redis::key::RedisKey::from_parts([
-            &self.key_prefix,
-            domain,
-            key,
-        ])
-        .into()
+        format!("{}:{}:{}", self.key_prefix, domain, key)
     }
 
     pub fn parsed_url(&self) -> ConfigResult<Url> {

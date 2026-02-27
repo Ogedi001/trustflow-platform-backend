@@ -3,8 +3,8 @@
 //! Provides utilities for generating cryptographically secure secrets,
 //! tokens, and other sensitive random values.
 
+use crate::value_objects::security::Secret;
 use fastrand;
-use crate::value_objects::Secret;
 
 /// Result type for secret operations
 pub type SecretResult<T> = Result<T, SecretError>;
