@@ -23,7 +23,7 @@ impl ConfigLoader {
         Self { sources: vec![] }
     }
 
-    /// Load shared libs/config/.env
+    /// Load shared libs/infrastructure/.env
     pub fn with_shared_env(mut self, source: DotenvSource) -> Self {
         self.sources.push(ConfigSource::Dotenv(source));
         self

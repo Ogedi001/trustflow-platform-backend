@@ -17,7 +17,6 @@ members = [
     # Libraries
     "libs/common",
     "libs/config",
-    "libs/telemetry",
     "libs/error",
     "libs/infrastructure",
 ]
